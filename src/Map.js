@@ -25,20 +25,22 @@ class Map extends Component {
   }
 
   loadMap() {
-    const mbAttr =
-      'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+    if (!this.map) {
+      const mbAttr =
+        'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
 
-    this.map = L.map(this.mapRef.current).setView([37.7749, -122.4194], 2);
+      this.map = L.map(this.mapRef.current).setView([37.7749, -122.4194], 2);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: mbAttr,
-    }).addTo(this.map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: mbAttr,
+      }).addTo(this.map);
+    }
 
     this.updateMarkers();
   }
 
   updateMarkers() {
-    const { data } = this.state;
+    const { data } = this.props;
 
     // Clear existing markers
     if (this.markers) {
@@ -48,8 +50,10 @@ class Map extends Component {
     }
 
     // Add new markers
-    this.markers = data.map(({ latitude, longitude }) => {
-      return L.marker([latitude, longitude]).addTo(this.map);
+    this.markers = data.map(({ latitude, longitude, location }) => {
+      return L.marker([parseFloat(latitude), parseFloat(longitude)])
+        .addTo(this.map)
+        .bindPopup(location);
     });
   }
 
