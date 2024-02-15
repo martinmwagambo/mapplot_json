@@ -97,7 +97,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>Map</h1>
+        <h1 className="text-xl font-bold text-center">Map</h1>
         <Map data={this.state.data} />
       </div>
     );
